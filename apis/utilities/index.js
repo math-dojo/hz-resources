@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+const argv = require('yargs')
+    .alias('f', 'file')
+        .nargs('f', 1)
+        .describe('f','path to the file to be processed by the cli')
+    .alias('o', 'operation')
+        .nargs('o', 1)
+        .describe('o', 'the operation to perform with the submitted file')
+        .choices('o', ['create', 'update', 'delete'])
+    .alias('t', 'type')
+        .nargs('t', 1)
+        .describe('t', 'the type of file being submitted')
+        .choices('t', ['api', 'policy'])
+    .usage("$0 --file ./path-to-file-relative-to-cwd --operation [create|update|delete] --type [api|policy]")
+    .help()
+    .argv;
