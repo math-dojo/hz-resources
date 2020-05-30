@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const { tykApiResponseData } = require("../resources/sample_payload");
-const { TykDashboardService } =  require("./tyk_dashboard.service");
+const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
 
 const AUTHORISATION_HEADER_NAME = 'authorization';
 
