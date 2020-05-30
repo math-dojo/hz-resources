@@ -1,6 +1,7 @@
 // jshint esversion:6
 const axios = require('axios').default;
 const querystring = require('querystring');
+const logger = require('pino')();
 
 class TykDashboardService {
 
@@ -20,21 +21,21 @@ class TykDashboardService {
         });
 
         this._httpClientInstance.interceptors.request.use(function (config) {
-            console.info(`Now sending request to: ${config.baseURL}${config.url}`);
+            logger.info(`Now sending request to: ${config.baseURL}${config.url}`);
             return config;
         }, function (error) {
-            console.error(`Error sending request: ${error.message}`);
+            logger.error(`Error sending request: ${error.message}`);
             return Promise.reject(error);
         });
 
         // Add a response interceptor
         this._httpClientInstance.interceptors.response.use(function (response) {
-            console.info(`Successful response from ${
+            logger.info(`Successful response from ${
                 response.request.path}, now extracting the json response for downstream consumers`);
             return response.data;
         }, function (error) {
-            console.error(`Unsuccessful response from ${error.request.path}`);
-            console.error(`Request config was: ${JSON.stringify(error.config)}`);
+            logger.error(`Unsuccessful response from ${error.request.path}`);
+            logger.error(`Request config was: ${JSON.stringify(error.config)}`);
             return Promise.reject(error);
         });
     }
@@ -50,7 +51,7 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            console.error(`.findApiByName failed because: ${error.message}`);
+            logger.error(`.findApiByName failed because: ${error.message}`);
             return null;
         });
     }
