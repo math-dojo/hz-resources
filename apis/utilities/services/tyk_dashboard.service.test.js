@@ -17,7 +17,7 @@ describe("TykDashboardService", function() {
     const authorisationToken = 'hush';
     const tykDashboardService = new TykDashboardService(authorisationToken, baseUrl);
 
-    it('.findApiByName should return apiDataResponse{} if successful', function() {
+    it('successful .findApiByName should return apiDataResponse{}', function() {
         const mockDataResponse = {
                 apis: [
                     tykApiResponseData
@@ -33,6 +33,18 @@ describe("TykDashboardService", function() {
         const apiDataResponse = tykDashboardService.findApiByName('myApiName');
         return Promise.all([
             expect(apiDataResponse).to.eventually.deep.equal(mockDataResponse)
+        ]);
+        
+    });
+    it('unsuccessful .findApiByName should return null', function() {
+        const apiNameToSearchFor = 'myApiName';
+        const scope = nock(baseUrl).get("/api/apis/search")
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .query({q: apiNameToSearchFor})
+            .reply(400, "some generic error");
+        const apiDataResponse = tykDashboardService.findApiByName('myApiName');
+        return Promise.all([
+            expect(apiDataResponse).to.eventually.be.null
         ]);
         
     });
