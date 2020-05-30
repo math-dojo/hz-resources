@@ -2,7 +2,7 @@
 const axios = require('axios').default;
 const querystring = require('querystring');
 
-export class TykDashboardService {
+class TykDashboardService {
 
     /**
      * Creates an instance of the TykDashboardService
@@ -82,3 +82,5 @@ export class TykDashboardService {
     }
 
 }
+
+module.exports.TykDashboardService = TykDashboardService;
