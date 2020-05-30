@@ -34,7 +34,7 @@ class TykDashboardService {
             return response.data;
         }, function (error) {
             console.error(`Unsuccessful response from ${error.request.path}`);
-            console.error(`Request config was: ${error.config}`);
+            console.error(`Request config was: ${JSON.stringify(error.config)}`);
             return Promise.reject(error);
         });
     }
@@ -44,8 +44,15 @@ class TykDashboardService {
      * @param {string} name 
      */
     findApiByName(name) {
-        const encodeNameParam = querystring.stringify(name);
-        return this._httpClientInstance.get(`/api/apis/search?q=${encodeNameParam}`);
+        return this._httpClientInstance.get(`/api/apis/search`, {
+            params: {
+                q: name
+            }
+        })
+        .catch(error => {
+            console.error(`.findApiByName failed because: ${error.message}`);
+            return null;
+        });
     }
 
     /**
