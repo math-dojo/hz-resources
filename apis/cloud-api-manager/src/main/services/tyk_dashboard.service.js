@@ -1,7 +1,6 @@
 // jshint esversion:6
 const axios = require('axios').default;
-const querystring = require('querystring');
-const logger = require('pino')();
+const logger = new (require('../logging/custom_logger'))("cloud-api-manager:services:tyk_dashboard.service");
 
 class TykDashboardService {
 
