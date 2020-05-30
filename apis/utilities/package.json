@@ -1,5 +1,5 @@
 {
-  "name": "utilities",
+  "name": "cloud-api-manager",
   "version": "1.0.0",
   "description": "Package for managing apis deployed on the tyk-cloud",
   "main": "index.js",
