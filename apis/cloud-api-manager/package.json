@@ -4,7 +4,8 @@
   "description": "Package for managing apis deployed on the tyk-cloud",
   "main": "index.js",
   "scripts": {
-    "test": "DEBUG=cloud-api-manager* ./node_modules/.bin/mocha"
+    "test:showlogs": "DEBUG=cloud-api-manager* ./node_modules/.bin/mocha",
+    "test": "./node_modules/.bin/mocha"
   },
   "author": "noce2",
   "license": "ISC",
