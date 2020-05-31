@@ -1,5 +1,5 @@
 // jshint esversion:6
-const { describe } = require("mocha");
+const { describe, it } = require("mocha");
 const nock = require('nock');
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
