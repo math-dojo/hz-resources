@@ -60,7 +60,11 @@ class TykDashboardService {
      * @param {string} systemId 
      */
     findApiBySystemId(systemId) {
-        return this._httpClientInstance.get(`/api/apis/${systemId}`);
+        return this._httpClientInstance.get(`/api/apis/${systemId}`)
+        .catch(error => {
+            logger.error(`.findApiBySystemId failed because: ${error.message}`);
+            return null;
+        });
     }
 
     /**
