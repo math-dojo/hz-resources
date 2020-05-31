@@ -119,6 +119,21 @@ class TykDashboardService {
         });
     }
 
+    /**
+     * 
+     * @param {string} name 
+     */
+    findPolicyByName(name) {
+        return this._httpClientInstance.get(`/api/portal/policies/search`, {
+            params: {
+                q: name
+            }
+        })
+        .catch(error => {
+            logger.error(`.findPolicyByName failed because: ${error.message}`);
+            return null;
+        });
+    }
 }
 
 module.exports.TykDashboardService = TykDashboardService;

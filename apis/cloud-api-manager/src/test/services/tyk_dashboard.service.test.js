@@ -11,6 +11,8 @@ const { tykApiResponseData, tykDeleteApiResponse, tykUpdateApiResponseData,
     tykCreateApiResponseData, tykCreateApiRequestObject, tykUpdateApiRequestObject
  } = require("../resources/sample_api_payload");
 
+const { tykFindPolicyByNameResponseData } = require("../resources/sample_policy_payloads");
+
 const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
 
 const AUTHORISATION_HEADER_NAME = 'authorization';
@@ -146,6 +148,36 @@ describe("TykDashboardService", function() {
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.createApi(tykCreateApiRequestObject);
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.be.null
+            ]);
+            
+        });
+    });
+
+    describe("Policy Operations", function() {
+        it('successful .findPolicyByName should return policyDataResponse{}', function() {
+            const mockDataResponse = tykFindPolicyByNameResponseData;
+            const scope = nock(baseUrl).get("/api/portal/policies/search")
+                .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+                .query({q: 'myPolicyName'})
+                .reply(200, mockDataResponse,
+                {
+                    "Content-Type": "application/json"
+                });
+            const apiDataResponse = tykDashboardService.findPolicyByName('myPolicyName');
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.deep.equal(mockDataResponse)
+            ]);
+            
+        });
+        it('unsuccessful .findPolicyByName should return null', function() {
+            const apiNameToSearchFor = 'myPolicyName';
+            const scope = nock(baseUrl).get("/api/portal/policies/search")
+                .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+                .query({q: apiNameToSearchFor})
+                .reply(400, "some generic error");
+            const apiDataResponse = tykDashboardService.findPolicyByName('myApiName');
             return Promise.all([
                 expect(apiDataResponse).to.eventually.be.null
             ]);
