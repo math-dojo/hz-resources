@@ -105,7 +105,7 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.deleteApiBySystemId failed because: ${error.message}`);
+            logger.error(`.updateApiBySystemId failed because: ${error.message}`);
             return null;
         });
     }
