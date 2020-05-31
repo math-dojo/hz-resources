@@ -9,7 +9,7 @@ const expect = chai.expect;
 
 const { tykApiResponseData, tykDeleteApiResponse, tykUpdateApiResponseData,
     tykCreateApiResponseData, tykCreateApiRequestObject, tykUpdateApiRequestObject
- } = require("../resources/sample_payload");
+ } = require("../resources/sample_api_payload");
 
 const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
 
