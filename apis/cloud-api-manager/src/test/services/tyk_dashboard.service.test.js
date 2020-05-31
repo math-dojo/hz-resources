@@ -48,4 +48,29 @@ describe("TykDashboardService", function() {
         ]);
         
     });
+
+    it('successful .findApiBySystemId should return apiDataResponse{}', function() {
+        const mockDataResponse = tykApiResponseData;
+        const scope = nock(baseUrl).get(/\/api\/apis\/([A-z]?[0-9]?)+$/)
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .reply(200, mockDataResponse,
+            {
+                "Content-Type": "application/json"
+            });
+        const apiDataResponse = tykDashboardService.findApiBySystemId('myApiId');
+        return Promise.all([
+            expect(apiDataResponse).to.eventually.deep.equal(mockDataResponse)
+        ]);
+        
+    });
+    it('unsuccessful .findApiBySystemId should return null', function() {
+        const scope = nock(baseUrl).get(/\/api\/apis\/([A-z]?[0-9]?)+$/)
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .reply(400, "some generic error");
+        const apiDataResponse = tykDashboardService.findApiBySystemId('myUnknownApiId');
+        return Promise.all([
+            expect(apiDataResponse).to.eventually.be.null
+        ]);
+        
+    });
 });
