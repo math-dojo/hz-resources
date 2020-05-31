@@ -72,7 +72,16 @@ class TykDashboardService {
      * @param {string} systemId 
      */
     deleteApiBySystemId(systemId) {
-        return this._httpClientInstance.delete(`/api/apis/${systemId}`);
+        return this._httpClientInstance.delete(`/api/apis/${systemId}`)
+            .then(dataResponse => {
+                return {
+                    status: dataResponse["Status"].toLowerCase()
+                }
+            })
+            .catch(error => {
+                logger.error(`.deleteApiBySystemId failed because: ${error.message}`);
+                return null;
+            });
     }
 
     /**

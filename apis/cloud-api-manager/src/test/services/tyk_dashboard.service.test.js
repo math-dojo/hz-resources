@@ -7,7 +7,7 @@ const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const { tykApiResponseData } = require("../resources/sample_payload");
+const { tykApiResponseData, tykDeleteApiResponse } = require("../resources/sample_payload");
 const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
 
 const AUTHORISATION_HEADER_NAME = 'authorization';
@@ -68,6 +68,31 @@ describe("TykDashboardService", function() {
             .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
             .reply(400, "some generic error");
         const apiDataResponse = tykDashboardService.findApiBySystemId('myUnknownApiId');
+        return Promise.all([
+            expect(apiDataResponse).to.eventually.be.null
+        ]);
+        
+    });
+
+    it('successful .deleteApiBySystemId should return deleteResponse with OK status', function() {
+        const mockDataResponse = tykDeleteApiResponse;
+        const scope = nock(baseUrl).delete(/\/api\/apis\/([A-z]?[0-9]?)+$/)
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .reply(204, mockDataResponse,
+            {
+                "Content-Type": "application/json"
+            });
+        const apiDeleteResponse = tykDashboardService.deleteApiBySystemId('myApiId');
+        return Promise.all([
+            expect(apiDeleteResponse).to.eventually.have.property("status").equal("ok")
+        ]);
+        
+    });
+    it('unsuccessful .deleteApiBySystemId should return null', function() {
+        const scope = nock(baseUrl).delete(/\/api\/apis\/([A-z]?[0-9]?)+$/)
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .reply(400, "some generic error");
+        const apiDataResponse = tykDashboardService.deleteApiBySystemId('myUnknownApiId');
         return Promise.all([
             expect(apiDataResponse).to.eventually.be.null
         ]);

@@ -80,4 +80,7 @@ const tykApiResponseData = {
     "hook_references": []
 };
 
+const tykDeleteApiResponseData = {"Status":"OK","Message":"API deleted","Meta":null};
+
 module.exports.tykApiResponseData = tykApiResponseData;
+module.exports.tykDeleteApiResponse = tykDeleteApiResponseData;
