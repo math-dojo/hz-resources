@@ -126,7 +126,7 @@ describe("TykDashboardService", function() {
         
     });
 
-    it('successful .createApi should return updateResponse with OK status', function() {
+    it('successful .createApi should return createResponse with OK status', function() {
         const mockDataResponse = tykCreateApiResponseData;
         const scope = nock(baseUrl).post(/\/api\/apis$/, tykCreateApiRequestObject)
             .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
