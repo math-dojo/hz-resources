@@ -7,7 +7,10 @@ const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-const { tykApiResponseData, tykDeleteApiResponse, tykUpdateApiResponseData } = require("../resources/sample_payload");
+const { tykApiResponseData, tykDeleteApiResponse, tykUpdateApiResponseData,
+    tykCreateApiResponseData, tykCreateApiRequestObject, tykUpdateApiRequestObject
+ } = require("../resources/sample_payload");
+
 const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
 
 const AUTHORISATION_HEADER_NAME = 'authorization';
@@ -100,23 +103,48 @@ describe("TykDashboardService", function() {
     });
     it('successful .updateApiBySystemId should return updateResponse with OK status', function() {
         const mockDataResponse = tykUpdateApiResponseData;
-        const scope = nock(baseUrl).put(/\/api\/apis\/([A-z]?[0-9]?)+$/)
+        const scope = nock(baseUrl).put(/\/api\/apis\/([A-z]?[0-9]?)+$/, tykUpdateApiRequestObject)
             .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
             .reply(204, mockDataResponse,
             {
                 "Content-Type": "application/json"
             });
-        const apiDeleteResponse = tykDashboardService.updateApiBySystemId('myApiId');
+        const apiDeleteResponse = tykDashboardService.updateApiBySystemId('myApiId', tykUpdateApiRequestObject);
         return Promise.all([
             expect(apiDeleteResponse).to.eventually.have.property("status").equal("ok")
         ]);
         
     });
     it('unsuccessful .updateApiBySystemId should return null', function() {
-        const scope = nock(baseUrl).put(/\/api\/apis\/([A-z]?[0-9]?)+$/)
+        const scope = nock(baseUrl).put(/\/api\/apis\/([A-z]?[0-9]?)+$/, tykUpdateApiRequestObject)
             .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
             .reply(400, "some generic error");
-        const apiDataResponse = tykDashboardService.updateApiBySystemId('myUnknownApiId');
+        const apiDataResponse = tykDashboardService.updateApiBySystemId('myUnknownApiId', tykUpdateApiRequestObject);
+        return Promise.all([
+            expect(apiDataResponse).to.eventually.be.null
+        ]);
+        
+    });
+
+    it('successful .createApi should return updateResponse with OK status', function() {
+        const mockDataResponse = tykCreateApiResponseData;
+        const scope = nock(baseUrl).post(/\/api\/apis$/, tykCreateApiRequestObject)
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .reply(201, mockDataResponse,
+            {
+                "Content-Type": "application/json"
+            });
+        const apiDeleteResponse = tykDashboardService.createApi(tykCreateApiRequestObject);
+        return Promise.all([
+            expect(apiDeleteResponse).to.eventually.have.property("status").equal("ok")
+        ]);
+        
+    });
+    it('unsuccessful .createApi should return null', function() {
+        const scope = nock(baseUrl).put(/\/api\/apis$/, tykCreateApiRequestObject)
+            .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+            .reply(400, "some generic error");
+        const apiDataResponse = tykDashboardService.createApi(tykCreateApiRequestObject);
         return Promise.all([
             expect(apiDataResponse).to.eventually.be.null
         ]);

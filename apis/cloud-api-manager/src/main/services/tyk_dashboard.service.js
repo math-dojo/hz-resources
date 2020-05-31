@@ -89,7 +89,16 @@ class TykDashboardService {
      * @param {object} apiDefinition 
      */
     createApi(apiDefinition) {
-        return this._httpClientInstance.post(`/api/apis`, apiDefinition);
+        return this._httpClientInstance.post(`/api/apis`, apiDefinition)
+        .then(dataResponse => {
+            return {
+                status: dataResponse["Status"].toLowerCase()
+            }
+        })
+        .catch(error => {
+            logger.error(`.createApi failed because: ${error.message}`);
+            return null;
+        });
     }
 
     /**
