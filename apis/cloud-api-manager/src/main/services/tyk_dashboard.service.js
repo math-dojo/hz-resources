@@ -177,7 +177,24 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.updateApiBySystemId failed because: ${error.message}`);
+            logger.error(`.updatePolicyById failed because: ${error.message}`);
+            return null;
+        });
+    }
+
+    /**
+     * 
+     * @param {string} policySystemId
+     */
+    deletePolicyById(policySystemId) {
+        return this._httpClientInstance.delete(`/api/portal/policies/${policySystemId}`)
+        .then(dataResponse => {
+            return {
+                status: dataResponse["Status"].toLowerCase()
+            }
+        })
+        .catch(error => {
+            logger.error(`.deletePolicyById failed because: ${error.message}`);
             return null;
         });
     }
