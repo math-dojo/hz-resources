@@ -158,9 +158,10 @@ describe("TykDashboardService", function() {
     describe("Policy Operations", function() {
         it('successful .findPolicyByName should return policyDataResponse{}', function() {
             const mockDataResponse = tykFindPolicyByNameResponseData;
+            const policyNameToSearchFor = 'myPolicyName';
             const scope = nock(baseUrl).get("/api/portal/policies/search")
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
-                .query({q: 'myPolicyName'})
+                .query({q: policyNameToSearchFor})
                 .reply(200, mockDataResponse,
                 {
                     "Content-Type": "application/json"
@@ -172,12 +173,12 @@ describe("TykDashboardService", function() {
             
         });
         it('unsuccessful .findPolicyByName should return null', function() {
-            const apiNameToSearchFor = 'myPolicyName';
+            const policyNameToSearchFor = 'myPolicyName';
             const scope = nock(baseUrl).get("/api/portal/policies/search")
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
-                .query({q: apiNameToSearchFor})
+                .query({q: policyNameToSearchFor})
                 .reply(400, "some generic error");
-            const apiDataResponse = tykDashboardService.findPolicyByName('myApiName');
+            const apiDataResponse = tykDashboardService.findPolicyByName(policyNameToSearchFor);
             return Promise.all([
                 expect(apiDataResponse).to.eventually.be.null
             ]);
