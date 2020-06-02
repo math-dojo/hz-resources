@@ -146,6 +146,23 @@ class TykDashboardService {
             return null;
         });
     }
+
+    /**
+     * 
+     * @param {object} policyDefinition 
+     */
+    createPolicy(policyDefinition) {
+        return this._httpClientInstance.post(`/api/portal/policies/`, policyDefinition)
+        .then(dataResponse => {
+            return {
+                status: dataResponse["Status"].toLowerCase()
+            }
+        })
+        .catch(error => {
+            logger.error(`.createPolicy failed because: ${error.message}`);
+            return null;
+        });
+    }
 }
 
 module.exports.TykDashboardService = TykDashboardService;
