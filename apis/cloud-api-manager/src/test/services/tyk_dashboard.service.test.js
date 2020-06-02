@@ -11,7 +11,7 @@ const { tykApiResponseData, tykDeleteApiResponse, tykUpdateApiResponseData,
     tykCreateApiResponseData, tykCreateApiRequestObject, tykUpdateApiRequestObject
  } = require("../resources/sample_api_payload");
 
-const { tykFindPolicyByNameResponseData } = require("../resources/sample_policy_payloads");
+const { tykFindPolicyByNameResponseData, retrievePolicyByIdResponseData } = require("../resources/sample_policy_payloads");
 
 const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
 
@@ -144,7 +144,7 @@ describe("TykDashboardService", function() {
             
         });
         it('unsuccessful .createApi should return null', function() {
-            const scope = nock(baseUrl).put(/\/api\/apis$/, tykCreateApiRequestObject)
+            const scope = nock(baseUrl).post(/\/api\/apis$/, tykCreateApiRequestObject)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.createApi(tykCreateApiRequestObject);
@@ -166,7 +166,7 @@ describe("TykDashboardService", function() {
                 {
                     "Content-Type": "application/json"
                 });
-            const apiDataResponse = tykDashboardService.findPolicyByName('myPolicyName');
+            const apiDataResponse = tykDashboardService.findPolicyByName(policyNameToSearchFor);
             return Promise.all([
                 expect(apiDataResponse).to.eventually.deep.equal(mockDataResponse)
             ]);
@@ -179,6 +179,33 @@ describe("TykDashboardService", function() {
                 .query({q: policyNameToSearchFor})
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.findPolicyByName(policyNameToSearchFor);
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.be.null
+            ]);
+            
+        });
+
+        it('successful .findPolicyById should return policyDataResponse{}', function() {
+            const mockDataResponse = retrievePolicyByIdResponseData;
+            const policyNameToSearchFor = 'myPolicyId';
+            const scope = nock(baseUrl).get(/api\/portal\/policies\/([A-z]?[0-9]?)+$/)
+                .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+                .reply(200, mockDataResponse,
+                {
+                    "Content-Type": "application/json"
+                });
+            const apiDataResponse = tykDashboardService.findPolicyById(policyNameToSearchFor);
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.deep.equal(mockDataResponse)
+            ]);
+            
+        });
+        it('unsuccessful .findPolicyById should return null', function() {
+            const policyNameToSearchFor = 'myPolicyId';
+            const scope = nock(baseUrl).get(/api\/portal\/policies\/([A-z]?[0-9]?)+$/)
+                .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+                .reply(400, "some generic error");
+            const apiDataResponse = tykDashboardService.findPolicyById(policyNameToSearchFor);
             return Promise.all([
                 expect(apiDataResponse).to.eventually.be.null
             ]);
