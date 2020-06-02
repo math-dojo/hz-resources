@@ -240,5 +240,36 @@ describe("TykDashboardService", function() {
             ]);
             
         });
+
+        it('successful .updatePolicyById should return policyDataResponse{}', function() {
+            const mockDataResponse = updatePolicyByIdResponseData;
+            const policyIdToUpdate = 'myPolicyId';
+            const scope = nock(baseUrl).put(/api\/portal\/policies\/([A-z]?[0-9]?)+$/, 
+                updatePolicyByIdRequestObject)
+                .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+                .reply(204, mockDataResponse,
+                {
+                    "Content-Type": "application/json"
+                });
+            const apiDataResponse = tykDashboardService.updatePolicyById(policyIdToUpdate, 
+                updatePolicyByIdRequestObject);
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.have.property("status").equal("ok")
+            ]);
+            
+        });
+        it('unsuccessful .updatePolicyById should return null', function() {
+            const policyIdToUpdate = 'myPolicyId';
+            const scope = nock(baseUrl).put(/api\/portal\/policies\/([A-z]?[0-9]?)+$/, 
+                updatePolicyByIdRequestObject)
+                .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
+                .reply(400, "some generic error");
+            const apiDataResponse = tykDashboardService.updatePolicyById(policyIdToUpdate, 
+                updatePolicyByIdRequestObject);
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.be.null
+            ]);
+            
+        });
     });
 });
