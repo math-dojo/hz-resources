@@ -134,6 +134,18 @@ class TykDashboardService {
             return null;
         });
     }
+
+    /**
+     * 
+     * @param {string} policySystemId 
+     */
+    findPolicyById(policySystemId) {
+        return this._httpClientInstance.get(`/api/portal/policies/${policySystemId}`)
+        .catch(error => {
+            logger.error(`.findPolicyById failed because: ${error.message}`);
+            return null;
+        });
+    }
 }
 
 module.exports.TykDashboardService = TykDashboardService;
