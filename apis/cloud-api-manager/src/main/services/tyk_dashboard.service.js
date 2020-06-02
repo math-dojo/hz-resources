@@ -163,6 +163,24 @@ class TykDashboardService {
             return null;
         });
     }
+
+    /**
+     * 
+     * @param {string} policySystemId 
+     * @param {object} policyDefinition 
+     */
+    updatePolicyById(policySystemId, policyDefinition) {
+        return this._httpClientInstance.put(`/api/portal/policies/${policySystemId}`, policyDefinition)
+        .then(dataResponse => {
+            return {
+                status: dataResponse["Status"].toLowerCase()
+            }
+        })
+        .catch(error => {
+            logger.error(`.updateApiBySystemId failed because: ${error.message}`);
+            return null;
+        });
+    }
 }
 
 module.exports.TykDashboardService = TykDashboardService;
