@@ -9,7 +9,7 @@ class TykDashboardService {
      * @param {string} authorization 
      * @param {string} baseUrl 
      */
-    constructor(authorization, baseUrl) {
+    constructor(authorization, baseUrl = 'https://admin.cloud.tyk.io') {
         this._httpClientInstance = axios.create({
             baseURL: baseUrl,
             timeout: 1000,
