@@ -1,6 +1,6 @@
 // jshint esversion:6
 const axios = require('axios').default;
-const logger = new (require('../logging/custom_logger'))("cloud-api-manager:services:tyk_dashboard.service");
+const logger = new (require('../logging/custom_logger'))("cloud-api-manager:services:tyk_dashboard");
 
 class TykDashboardService {
 
