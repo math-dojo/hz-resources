@@ -16,7 +16,7 @@ const { tykFindPolicyByNameResponseData, retrievePolicyByIdResponseData,
     updatePolicyByIdResponseData, deletePolicyByIdResponseData
  } = require("../resources/sample_policy_payloads");
 
-const { TykDashboardService } =  require("../../main/services/tyk_dashboard.service");
+const { TykDashboardService } =  require("../../main/services/tyk_dashboard");
 
 const AUTHORISATION_HEADER_NAME = 'authorization';
 
