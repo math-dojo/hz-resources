@@ -18,8 +18,13 @@ describe("CloudApiManagerController", function() {
             expect(() => new CloudApiManagerController({provider: 'tyk', authorisation: ''})).to.throw();
             expect(() => new CloudApiManagerController({provider: 'tyk'})).to.throw();
         });
-        it("should throw an error if the request provider is null or empty");
-        it("should throw an error if the request provider is unknown");
+        it("should throw an error if the request provider is null or empty", function() {
+            expect(() => new CloudApiManagerController({authorisation: 'fizz'})).to.throw();
+            expect(() => new CloudApiManagerController({provider: '', authorisation: 'fizz'})).to.throw();            
+        });
+        it("should throw an error if the request provider is unknown", function() {
+            expect(() => new CloudApiManagerController({provider: 'kong', authorisation: 'fizz'})).to.throw();
+        });
     });
     describe(".create", function() {
         it("should return if successful");
