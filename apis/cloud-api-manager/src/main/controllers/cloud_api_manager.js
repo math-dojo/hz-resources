@@ -17,9 +17,15 @@ class CloudApiManagerController {
         provider,
         authorisation
     }) {
+        if((!authorisation) || authorisation.length < 1) {
+            const errorMessage = `authorisation cannot be undefined, null or empty`;
+            logger.error(errorMessage)
+            throw new Error(errorMessage);
+        }
         switch (provider) {
             case 'tyk':
-                this.apiServiceProvider = new TykDashboardService(authorisation)
+                this.apiServiceProvider = new TykDashboardService(authorisation);
+                break;
             default:
                 const errorMessage = `the specified provider ${provider} is not configured in this package`;
                 logger.error(errorMessage)
@@ -105,3 +111,5 @@ class CloudApiManagerController {
         }
     }
 }
+
+module.exports.CloudApiManagerController = CloudApiManagerController;

@@ -12,9 +12,12 @@ describe("CloudApiManagerController", function() {
     describe("Initialisation", function() {
         it("should return a new CloudApiManagerController if successful", function() {
             const returnedController = new CloudApiManagerController({provider: 'tyk', authorisation: 'fizzbuzz'});
-            expect(returnedController).to.be.a(CloudApiManagerController);
+            expect(returnedController).to.be.instanceOf(CloudApiManagerController);
         });
-        it("should throw an error if authorisation is null or empty");
+        it("should throw an error if authorisation is null or empty", function() {
+            expect(() => new CloudApiManagerController({provider: 'tyk', authorisation: ''})).to.throw();
+            expect(() => new CloudApiManagerController({provider: 'tyk'})).to.throw();
+        });
         it("should throw an error if the request provider is null or empty");
         it("should throw an error if the request provider is unknown");
     });
