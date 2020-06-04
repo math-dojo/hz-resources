@@ -7,6 +7,12 @@ const logger = new (require('../logging/custom_logger'))("cloud-api-manager:cont
 
 class CloudApiManagerController {
 
+    /**
+     * Initialises a CloudApiManagerController
+     * @param {Object} controllerConfig - The config for the controller
+     * @param {string} controllerConfig.provider - The product that provides the cloud-api-manager
+     * @param {string} controllerConfig.authorisation - The security token used to authorise interactions with the manager
+     */
     constructor({
         provider,
         authorisation
@@ -24,6 +30,10 @@ class CloudApiManagerController {
     /**
      * This method executes the requested behaviour specified
      * by the params
+     * @param {Object} executionConfig - The config for the behaviour to executre
+     * @param {string} executionConfig.filePath - The filePath of the object to be managed
+     * @param {string} executionConfig.operation - The operation to perform with the supplied object via filePath
+     * @param {string} executionConfig.type - The type of object at the filePath
      */
     execute({
         filePath,
