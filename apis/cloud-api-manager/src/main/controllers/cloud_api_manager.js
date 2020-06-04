@@ -8,17 +8,10 @@ const logger = new (require('../logging/custom_logger'))("cloud-api-manager:cont
 class CloudApiManagerController {
 
     constructor({
-        filePath,
-        operation,
-        type,
         provider,
-        authorisation        
+        authorisation
     }) {
-        this.filePath = filePath;
-        this.operation = operation;
-        this.type = type;
-        
-        switch(provider) {
+        switch (provider) {
             case 'tyk':
                 this.apiServiceProvider = new TykDashboardService(authorisation)
             default:
