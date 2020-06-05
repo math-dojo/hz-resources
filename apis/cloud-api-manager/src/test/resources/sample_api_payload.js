@@ -304,9 +304,16 @@ const tykUpdateApiRequestObject = {
     ]
 };
 
+const tykApiSearchResponseData = {
+    apis: [
+        tykApiResponseData
+    ]
+};
+
 module.exports.tykApiResponseData = tykApiResponseData;
 module.exports.tykDeleteApiResponse = tykDeleteApiResponseData;
 module.exports.tykUpdateApiResponseData = tykUpdateApiResponseData;
 module.exports.tykCreateApiResponseData = tykCreateApiResponseData;
 module.exports.tykCreateApiRequestObject = tykCreateApiRequestObject;
 module.exports.tykUpdateApiRequestObject = tykUpdateApiRequestObject;
+module.exports.tykApiSearchResponseData = tykApiSearchResponseData;

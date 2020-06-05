@@ -8,8 +8,8 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const { tykApiResponseData, tykDeleteApiResponse, tykUpdateApiResponseData,
-    tykCreateApiResponseData, tykCreateApiRequestObject, tykUpdateApiRequestObject
- } = require("../resources/sample_api_payload");
+    tykCreateApiResponseData, tykCreateApiRequestObject, tykUpdateApiRequestObject,
+    tykApiSearchResponseData } = require("../resources/sample_api_payload");
 
 const { tykFindPolicyByNameResponseData, retrievePolicyByIdResponseData,
     createPolicyRequestObject, createPolicyResponseData, updatePolicyByIdRequestObject,
@@ -27,21 +27,16 @@ describe("TykDashboardService", function() {
 
     describe("Api Operations", function() {
         it('successful .findApiByName should return apiDataResponse{}', function() {
-            const mockDataResponse = {
-                    apis: [
-                        tykApiResponseData
-                    ]
-                };
             const scope = nock(baseUrl).get("/api/apis/search")
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .query({q: 'myApiName'})
-                .reply(200, mockDataResponse,
+                .reply(200, tykApiSearchResponseData,
                 {
                     "Content-Type": "application/json"
                 });
             const apiDataResponse = tykDashboardService.findApiByName('myApiName');
             return Promise.all([
-                expect(apiDataResponse).to.eventually.deep.equal(mockDataResponse)
+                expect(apiDataResponse).to.eventually.deep.equal(tykApiSearchResponseData)
             ]);
             
         });
