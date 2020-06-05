@@ -57,6 +57,16 @@ describe("TykDashboardService", function() {
             ]);
             
         });
+
+        it('.findApiByName should return a rejected promise if name is null or empty', function() {
+            const apiNameToSearchFor = '';
+            const apiDataResponse = tykDashboardService.findApiByName('');
+            return Promise.all([
+                expect(apiDataResponse).to.eventually.be.rejectedWith(TypeError, 
+                    ".findApiByName must have a name to search for, it is currently null or empty")
+            ]);
+            
+        });
     
         it('successful .findApiBySystemId should return apiDataResponse{}', function() {
             const mockDataResponse = tykApiResponseData;
