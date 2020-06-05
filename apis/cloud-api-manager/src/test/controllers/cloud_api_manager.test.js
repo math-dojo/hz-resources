@@ -15,15 +15,28 @@ describe("CloudApiManagerController", function() {
             expect(returnedController).to.be.instanceOf(CloudApiManagerController);
         });
         it("should throw an error if authorisation is null or empty", function() {
-            expect(() => new CloudApiManagerController({provider: 'tyk', authorisation: ''})).to.throw();
-            expect(() => new CloudApiManagerController({provider: 'tyk'})).to.throw();
+            expect(() => new CloudApiManagerController({provider: 'tyk', authorisation: ''})).to.throw(
+                `authorisation cannot be undefined, null or empty`
+            );
+            expect(() => new CloudApiManagerController({provider: 'tyk'})).to.throw(
+                `authorisation cannot be undefined, null or empty`
+            );
         });
         it("should throw an error if the request provider is null or empty", function() {
-            expect(() => new CloudApiManagerController({authorisation: 'fizz'})).to.throw();
-            expect(() => new CloudApiManagerController({provider: '', authorisation: 'fizz'})).to.throw();            
+            expect(() => new CloudApiManagerController({authorisation: 'fizz'})).to.throw(
+                `the specified provider "undefined" is not configured in this package`
+            );
+            expect(() => new CloudApiManagerController({provider: '', authorisation: 'fizz'})).to.throw(
+                `the specified provider "" is not configured in this package`
+            );            
         });
         it("should throw an error if the request provider is unknown", function() {
-            expect(() => new CloudApiManagerController({provider: 'kong', authorisation: 'fizz'})).to.throw();
+            const provider = 'kong';
+            expect(() => new CloudApiManagerController({provider: provider, authorisation: 'fizz'})).to.throw(
+                `the specified provider "${provider}" is not configured in this package`
+            );
+        });
+    });
         });
     });
     describe(".create", function() {

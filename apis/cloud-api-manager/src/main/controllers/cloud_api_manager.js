@@ -27,7 +27,7 @@ class CloudApiManagerController {
                 this.apiServiceProvider = new TykDashboardService(authorisation);
                 break;
             default:
-                const errorMessage = `the specified provider ${provider} is not configured in this package`;
+                const errorMessage = `the specified provider "${provider}" is not configured in this package`;
                 logger.error(errorMessage)
                 throw new Error(errorMessage);
         }
