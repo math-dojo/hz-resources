@@ -200,6 +200,18 @@ describe("TykDashboardService", function() {
             
         });
 
+        it('.findPolicyByName should return a rejected promise if name is null or empty', function() {
+            return Promise.all([
+                expect((() => tykDashboardService.findPolicyByName(''))()).to.eventually.be.rejectedWith(
+                    ".findPolicyByName must have a name to search for which is currently null or empty"),
+                expect((() => tykDashboardService.findPolicyByName(null))()).to.eventually.be.rejectedWith(
+                    ".findPolicyByName must have a name to search for which is currently null or empty"),
+                expect((() => tykDashboardService.findPolicyByName(undefined))()).to.eventually.be.rejectedWith(
+                    ".findPolicyByName must have a name to search for which is currently null or empty"),                 
+            ]);
+            
+        });
+
         it('successful .findPolicyById should return policyDataResponse{}', function() {
             const mockDataResponse = retrievePolicyByIdResponseData;
             const policyNameToSearchFor = 'myPolicyId';

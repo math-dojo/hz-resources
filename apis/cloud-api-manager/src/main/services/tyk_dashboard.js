@@ -129,6 +129,11 @@ class TykDashboardService {
      * @param {string} name 
      */
     findPolicyByName(name) {
+        if(!name) {
+            const error = new Error(".findPolicyByName must have a name to search for which is currently null or empty");
+            logger.error(`.findPolicyByName failed because: ${error.message}`);
+            return Promise.reject(error);
+        }
         return this._httpClientInstance.get(`/api/portal/policies/search`, {
             params: {
                 q: name
