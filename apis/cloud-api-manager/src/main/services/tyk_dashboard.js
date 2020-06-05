@@ -44,6 +44,11 @@ class TykDashboardService {
      * @param {string} name 
      */
     findApiByName(name) {
+        if(!name) {
+            const error = new Error(".findApiByName must have a name to search for which is currently null or empty");
+            logger.error(`.findApiByName failed because: ${error.message}`);
+            return Promise.reject(error);
+        }
         return this._httpClientInstance.get(`/api/apis/search`, {
             params: {
                 q: name
