@@ -75,7 +75,17 @@ describe("CloudApiManagerController", function () {
             return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
 
         });
-        it("should return a rejected promise if nothing was found");
+        it("should return a rejected promise if nothing was found", function () {
+            const nameToSearchFor = tykApiSearchResponseData.apis[0].api_definition.name;
+
+            const returnedResults = {apis: []};
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+            const findApiByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findApiByName");
+            findApiByNameProviderStub.returns(Promise.resolve(returnedResults));
+
+            const systemIdPromise = testController.findAssetIdentifier('api', { api_definition: { name: nameToSearchFor } });
+            return expect(systemIdPromise).to.eventually.be.rejectedWith(/the asset with name (.*) does not exist/);
+        });
     });
     describe(".create", function () {
         it("should return if successful");

@@ -17,7 +17,7 @@ class CloudApiManagerController {
         provider,
         authorisation
     }) {
-        if((!authorisation) || authorisation.length < 1) {
+        if ((!authorisation) || authorisation.length < 1) {
             const errorMessage = `authorisation cannot be undefined, null or empty`;
             logger.error(errorMessage)
             throw new Error(errorMessage);
@@ -116,13 +116,19 @@ class CloudApiManagerController {
             case 'api':
                 const desiredName = assetObject.api_definition.name;
                 return this.apiServiceProvider.findApiByName(desiredName)
-                .then( searchResults => {
-                    logger.info(`${searchResults.apis.length} search result(s) for asset name: ${desiredName}`);
-                    const matchingResults = searchResults.apis.filter(eachApi => 
-                        desiredName === eachApi.api_definition.name);
-                    return matchingResults[0].api_definition.id;
-                })
-                .catch();
+                    .then(searchResults => {
+                        if (searchResults.apis.length < 1) {
+                            throw Error(`the asset with name ${desiredName} does not exist in the provider`);
+                        }
+                        logger.info(`${searchResults.apis.length} search result(s) for asset name: ${desiredName}`);
+                        const matchingResults = searchResults.apis.filter(eachApi =>
+                            desiredName === eachApi.api_definition.name);
+                        return matchingResults[0].api_definition.id;
+                    })
+                    .catch(error => {
+                        logger.error(`.findAssetIdentifier failed because: ${error.message}`);
+                        return Promise.reject(error);
+                    });
             case 'policy':
                 return this.apiServiceProvider.findApiByName(assetObject.name);
             default:
