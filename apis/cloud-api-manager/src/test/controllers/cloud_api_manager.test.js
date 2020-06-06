@@ -119,7 +119,16 @@ describe("CloudApiManagerController", function () {
             const systemIdPromise = testController.findAssetIdentifier('policy', { name: nameToSearchFor });
             return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
         });
-        it("policies: should return a rejected promise nothing was found");
+        it("policies: should return a rejected promise nothing was found", function() {
+            const nameToSearchFor = tykFindPolicyByNameResponseData.Data[0].name;
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+            const findPolicyByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findPolicyByName");
+            findPolicyByNameProviderStub.returns(Promise.resolve({Data:[]}));
+
+            const systemIdPromise = testController.findAssetIdentifier('policy', { name: nameToSearchFor });
+            return expect(systemIdPromise).to.eventually.be.rejectedWith(/the asset with name (.*) does not exist/);
+        });
     });
     describe(".create", function () {
         it("should return if successful");
