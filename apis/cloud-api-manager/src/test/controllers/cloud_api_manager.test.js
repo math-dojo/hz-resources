@@ -100,7 +100,25 @@ describe("CloudApiManagerController", function () {
             const systemIdPromise = testController.findAssetIdentifier('policy', { name: nameToSearchFor });
             return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
         });
-        it("policies: should return an id if the provider search returns multiple possibilities");
+        it("policies: should return an id if the provider search returns multiple possibilities", function() {
+            const nameToSearchFor = tykFindPolicyByNameResponseData.Data[0].name;
+            const expectedSystemId = tykFindPolicyByNameResponseData.Data[0]._id;
+            const multipleResults = {
+                Data: [
+                    JSON.parse(JSON.stringify(tykFindPolicyByNameResponseData.Data[0])),
+                    JSON.parse(JSON.stringify(tykFindPolicyByNameResponseData.Data[0]))
+                ]
+            };
+            multipleResults.Data[1].name = multipleResults.Data[1].name + " a small change";
+            multipleResults.Data[1]._id = "a_different_id";
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+            const findPolicyByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findPolicyByName");
+            findPolicyByNameProviderStub.returns(Promise.resolve(multipleResults));
+
+            const systemIdPromise = testController.findAssetIdentifier('policy', { name: nameToSearchFor });
+            return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
+        });
         it("policies: should return a rejected promise nothing was found");
     });
     describe(".create", function () {
