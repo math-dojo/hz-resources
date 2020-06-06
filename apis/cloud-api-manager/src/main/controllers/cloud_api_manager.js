@@ -130,7 +130,21 @@ class CloudApiManagerController {
                         return Promise.reject(error);
                     });
             case 'policy':
-                return this.apiServiceProvider.findApiByName(assetObject.name);
+                const desiredPolicyName = assetObject.name;
+                return this.apiServiceProvider.findPolicyByName(desiredPolicyName)
+                .then(searchResults => {
+                    if (searchResults.Data.length < 1) {
+                        throw Error(`the asset with name ${desiredPolicyName} does not exist in the provider`);
+                    }
+                    logger.info(`${searchResults.Data.length} search result(s) for asset name: ${desiredPolicyName}`);
+                    const matchingResults = searchResults.Data.filter(eachPolicy =>
+                        desiredPolicyName === eachPolicy.name);
+                    return matchingResults[0]._id;
+                })
+                .catch(error => {
+                    logger.error(`.findAssetIdentifier failed because: ${error.message}`);
+                    return Promise.reject(error);
+                });
             default:
                 const errorMessage = `The specified type, ${type}, is not valid.`;
                 logger.error(errorMessage);
