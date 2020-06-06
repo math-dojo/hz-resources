@@ -40,7 +40,7 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .findApiByName should return null', function() {
+        it('unsuccessful .findApiByName should return rejected promise', function() {
             const apiNameToSearchFor = 'myApiName';
             const scope = nock(baseUrl).get("/api/apis/search")
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
@@ -48,7 +48,7 @@ describe("TykDashboardService", function() {
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.findApiByName('myApiName');
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -79,13 +79,13 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .findApiBySystemId should return null', function() {
+        it('unsuccessful .findApiBySystemId should return rejected promise', function() {
             const scope = nock(baseUrl).get(/\/api\/apis\/([A-z]?[0-9]?)+$/)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.findApiBySystemId('myUnknownApiId');
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -104,13 +104,13 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .deleteApiBySystemId should return null', function() {
+        it('unsuccessful .deleteApiBySystemId should return rejected promise', function() {
             const scope = nock(baseUrl).delete(/\/api\/apis\/([A-z]?[0-9]?)+$/)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.deleteApiBySystemId('myUnknownApiId');
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -128,13 +128,13 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .updateApiBySystemId should return null', function() {
+        it('unsuccessful .updateApiBySystemId should return rejected promise', function() {
             const scope = nock(baseUrl).put(/\/api\/apis\/([A-z]?[0-9]?)+$/, tykUpdateApiRequestObject)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.updateApiBySystemId('myUnknownApiId', tykUpdateApiRequestObject);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -153,13 +153,13 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .createApi should return null', function() {
+        it('unsuccessful .createApi should return rejected promise', function() {
             const scope = nock(baseUrl).post(/\/api\/apis$/, tykCreateApiRequestObject)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.createApi(tykCreateApiRequestObject);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -182,7 +182,7 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .findPolicyByName should return null', function() {
+        it('unsuccessful .findPolicyByName should return rejected promise', function() {
             const policyNameToSearchFor = 'myPolicyName';
             const scope = nock(baseUrl).get("/api/portal/policies/search")
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
@@ -190,7 +190,7 @@ describe("TykDashboardService", function() {
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.findPolicyByName(policyNameToSearchFor);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -222,14 +222,14 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .findPolicyById should return null', function() {
+        it('unsuccessful .findPolicyById should return rejected promise', function() {
             const policyNameToSearchFor = 'myPolicyId';
             const scope = nock(baseUrl).get(/api\/portal\/policies\/([A-z]?[0-9]?)+$/)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.findPolicyById(policyNameToSearchFor);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -249,13 +249,13 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .createPolicy should return null', function() {
+        it('unsuccessful .createPolicy should return rejected promise', function() {
             const scope = nock(baseUrl).post(/api\/portal\/policies\/+$/)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.createPolicy(createPolicyRequestObject);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -277,7 +277,7 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .updatePolicyById should return null', function() {
+        it('unsuccessful .updatePolicyById should return rejected promise', function() {
             const policyIdToUpdate = 'myPolicyId';
             const scope = nock(baseUrl).put(/api\/portal\/policies\/([A-z]?[0-9]?)+$/, 
                 updatePolicyByIdRequestObject)
@@ -286,7 +286,7 @@ describe("TykDashboardService", function() {
             const apiDataResponse = tykDashboardService.updatePolicyById(policyIdToUpdate, 
                 updatePolicyByIdRequestObject);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
             
         });
@@ -306,14 +306,14 @@ describe("TykDashboardService", function() {
             ]);
             
         });
-        it('unsuccessful .deletePolicyById should return null', function() {
+        it('unsuccessful .deletePolicyById should return rejected promise', function() {
             const policyIdToUpdate = 'myPolicyId';
             const scope = nock(baseUrl).delete(/api\/portal\/policies\/([A-z]?[0-9]?)+$/)
                 .matchHeader(AUTHORISATION_HEADER_NAME, authorisationToken)
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.deletePolicyById(policyIdToUpdate);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.null
+                expect(apiDataResponse).to.eventually.be.rejected
             ]);
         });
     });
