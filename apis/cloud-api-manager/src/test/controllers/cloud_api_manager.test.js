@@ -1,10 +1,13 @@
 // jshint esversion:6
+"use-strict";
 const { describe, it } = require("mocha");
 const sinon = require('sinon');
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 
 const { tykApiSearchResponseData, tykApiResponseData } = require("../resources/sample_api_payload");
+Object.freeze(tykApiResponseData);
+Object.freeze(tykApiSearchResponseData);
 
 const { CloudApiManagerController } = require("../../main/controllers/cloud_api_manager");
 
