@@ -37,6 +37,17 @@ describe("CloudApiManagerController", function() {
             );
         });
     });
+    describe(".findAssetIdentifier", function() {
+        it("should return an api with the exact matching name if the provider search returns one possibility", function() {
+            const nameToSearchFor = tykApiSearchResponseData.apis[0].api_definition.name;
+            const expectedSystemId = tykApiSearchResponseData.apis[0].api_definition.id;
+
+            const testController = new CloudApiManagerController({provider: 'tyk', authorisation: 'fizzbuzz'});
+            const findApiByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findApiByName");
+            findApiByNameProviderStub.returns(Promise.resolve(tykApiSearchResponseData));
+
+            const systemIdPromise = testController.findAssetIdentifier('api', { api_definition: { name: nameToSearchFor}});
+            expect(systemIdPromise).to.eventually.equal(expectedSystemId);
         });
     });
     describe(".create", function() {

@@ -110,6 +110,27 @@ class CloudApiManagerController {
                 return Promise.reject(new Error(errorMessage));
         }
     }
+
+    findAssetIdentifier(type, assetObject) {
+        switch (type) {
+            case 'api':
+                const desiredName = assetObject.api_definition.name;
+                return this.apiServiceProvider.findApiByName(desiredName)
+                .then( searchResults => {
+                    logger.info(`${searchResults.apis.length} search result(s) for asset name: ${desiredName}`);
+                    const matchingResults = searchResults.apis.filter(eachApi => 
+                        desiredName === eachApi.api_definition.name);
+                    return matchingResults[0].api_definition.id;
+                })
+                .catch();
+            case 'policy':
+                return this.apiServiceProvider.findApiByName(assetObject.name);
+            default:
+                const errorMessage = `The specified type, ${type}, is not valid.`;
+                logger.error(errorMessage);
+                return Promise.reject(new Error(errorMessage));
+        }
+    }
 }
 
 module.exports.CloudApiManagerController = CloudApiManagerController;
