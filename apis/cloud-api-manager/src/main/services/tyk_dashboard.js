@@ -55,8 +55,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.findApiByName failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.findApiByName failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -67,8 +68,9 @@ class TykDashboardService {
     findApiBySystemId(systemId) {
         return this._httpClientInstance.get(`/api/apis/${systemId}`)
         .catch(error => {
-            logger.error(`.findApiBySystemId failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.findApiBySystemId failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -84,8 +86,9 @@ class TykDashboardService {
                 }
             })
             .catch(error => {
-                logger.error(`.deleteApiBySystemId failed because: ${error.message}`);
-                return null;
+                const wrappedError = new Error(`.deleteApiBySystemId failed because: ${error.message}`);
+                logger.error(wrappedError.message);
+                return Promise.reject(wrappedError);
             });
     }
 
@@ -101,8 +104,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.createApi failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.createApi failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -119,8 +123,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.updateApiBySystemId failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.updateApiBySystemId failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -140,8 +145,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.findPolicyByName failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.findPolicyByName failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -152,8 +158,9 @@ class TykDashboardService {
     findPolicyById(policySystemId) {
         return this._httpClientInstance.get(`/api/portal/policies/${policySystemId}`)
         .catch(error => {
-            logger.error(`.findPolicyById failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.findPolicyById failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -169,8 +176,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.createPolicy failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.createPolicy failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -187,8 +195,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.updatePolicyById failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.updatePolicyById failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 
@@ -204,8 +213,9 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            logger.error(`.deletePolicyById failed because: ${error.message}`);
-            return null;
+            const wrappedError = new Error(`.deletePolicyById failed because: ${error.message}`);
+            logger.error(wrappedError.message);
+            return Promise.reject(wrappedError);
         });
     }
 }
