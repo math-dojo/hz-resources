@@ -6,6 +6,9 @@ const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 
 const { tykApiSearchResponseData, tykApiResponseData } = require("../resources/sample_api_payload");
+const { tykFindPolicyByNameResponseData } = require("../resources/sample_policy_payloads");
+
+Object.freeze(tykFindPolicyByNameResponseData);
 Object.freeze(tykApiResponseData);
 Object.freeze(tykApiSearchResponseData);
 
@@ -86,7 +89,17 @@ describe("CloudApiManagerController", function () {
             const systemIdPromise = testController.findAssetIdentifier('api', { api_definition: { name: nameToSearchFor } });
             return expect(systemIdPromise).to.eventually.be.rejectedWith(/the asset with name (.*) does not exist/);
         });
-        it("policies: should return an id if the provider search returns one possibility");
+        it("policies: should return an id if the provider search returns one possibility", function() {
+            const nameToSearchFor = tykFindPolicyByNameResponseData.Data[0].name;
+            const expectedSystemId = tykFindPolicyByNameResponseData.Data[0]._id;
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+            const findPolicyByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findPolicyByName");
+            findPolicyByNameProviderStub.returns(Promise.resolve(tykFindPolicyByNameResponseData));
+
+            const systemIdPromise = testController.findAssetIdentifier('policy', { name: nameToSearchFor });
+            return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
+        });
         it("policies: should return an id if the provider search returns multiple possibilities");
         it("policies: should return a rejected promise nothing was found");
     });
