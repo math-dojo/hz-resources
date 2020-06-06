@@ -44,7 +44,7 @@ describe("CloudApiManagerController", function () {
         });
     });
     describe(".findAssetIdentifier", function () {
-        it("should return an api with the exact matching name if the provider search returns one possibility", function () {
+        it("apis: should return an id if the provider search returns one possibility", function () {
             const nameToSearchFor = tykApiSearchResponseData.apis[0].api_definition.name;
             const expectedSystemId = tykApiSearchResponseData.apis[0].api_definition.id;
 
@@ -55,7 +55,7 @@ describe("CloudApiManagerController", function () {
             const systemIdPromise = testController.findAssetIdentifier('api', { api_definition: { name: nameToSearchFor } });
             return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
         });
-        it("should return an api with the exact matching name if the provider search returns multiple possibilities", function () {
+        it("apis: should return an id if the provider search returns multiple possibilities", function () {
             const nameToSearchFor = tykApiResponseData.api_definition.name;
             const expectedSystemId = tykApiResponseData.api_definition.id;
             const multipleResults = {
@@ -75,7 +75,7 @@ describe("CloudApiManagerController", function () {
             return expect(systemIdPromise).to.eventually.equal(expectedSystemId);
 
         });
-        it("should return a rejected promise if nothing was found", function () {
+        it("apis: should return a rejected promise nothing was found", function () {
             const nameToSearchFor = tykApiSearchResponseData.apis[0].api_definition.name;
 
             const returnedResults = {apis: []};
@@ -86,6 +86,9 @@ describe("CloudApiManagerController", function () {
             const systemIdPromise = testController.findAssetIdentifier('api', { api_definition: { name: nameToSearchFor } });
             return expect(systemIdPromise).to.eventually.be.rejectedWith(/the asset with name (.*) does not exist/);
         });
+        it("policies: should return an id if the provider search returns one possibility");
+        it("policies: should return an id if the provider search returns multiple possibilities");
+        it("policies: should return a rejected promise nothing was found");
     });
     describe(".create", function () {
         it("should return if successful");
