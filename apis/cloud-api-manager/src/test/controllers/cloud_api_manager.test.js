@@ -6,11 +6,13 @@ const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 
 const { tykApiSearchResponseData, tykApiResponseData } = require("../resources/sample_api_payload");
-const { tykFindPolicyByNameResponseData } = require("../resources/sample_policy_payloads");
+const { tykFindPolicyByNameResponseData, retrievePolicyByIdResponseData 
+    } = require("../resources/sample_policy_payloads");
 
 Object.freeze(tykFindPolicyByNameResponseData);
 Object.freeze(tykApiResponseData);
 Object.freeze(tykApiSearchResponseData);
+Object.freeze(retrievePolicyByIdResponseData);
 
 const { CloudApiManagerController } = require("../../main/controllers/cloud_api_manager");
 
@@ -188,7 +190,20 @@ describe("CloudApiManagerController", function () {
         });
         it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
         it("policies: should reject with error if no policy with similar name but operation fails");
-        it("policies: should reject with error if policy with similar name");
+        it("policies: should reject with error if policy with similar name", function() {
+            const { name, access_rights, active } = tykFindPolicyByNameResponseData.Data[0];
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+            const findPolicyByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findPolicyByName");
+            findPolicyByNameProviderStub.returns(Promise.resolve(tykFindPolicyByNameResponseData));
+            
+            const creationResponsePromise = testController.create('policy', Promise.resolve({
+                name, access_rights, active
+            }));
+
+            return expect(creationResponsePromise).to.eventually.be.rejectedWith(
+                /create operation failed because: an asset with name (.*) already exists/);
+        });
     });
     describe(".update", function () {
         it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds");
