@@ -81,29 +81,30 @@ class CloudApiManagerController {
         switch (type) {
             case 'api':
                 return inputObjectPromise
-                    .then(apiDefinitionObject => {
-                        logger.info(`.create: checking if asset with name ${apiDefinitionObject.api_definition.name
+                    .then(definitionObject => {
+                        const assetName = definitionObject.api_definition.name;
+                        logger.info(`.create: checking if asset with name ${assetName
                             } exists`);
-                        return this.findAssetIdentifier(type, apiDefinitionObject)
+                        return this.findAssetIdentifier(type, definitionObject)
                             .then(systemId => {
                                 logger.info(`.create: systemId for asset with name ${
-                                    apiDefinitionObject.api_definition.name} is ${systemId}`);
+                                    definitionObject.api_definition.name} is ${systemId}`);
                                 const errorMessage = `an asset with name ${
-                                    apiDefinitionObject.api_definition.name} already exists`;
+                                    definitionObject.api_definition.name} already exists`;
                                 logger.error(`.create: ${errorMessage}`);
                                 return Promise.reject(new Error(errorMessage));
                             })
                             .catch(error => {
                                 if (/asset with name (.*) does not exist in the provider/.test(error.message)) {
-                                    logger.info(`.create: asset with name ${apiDefinitionObject.api_definition.name
+                                    logger.info(`.create: asset with name ${definitionObject.api_definition.name
                                         } does not exist, proceeding with creation`);
-                                    return Promise.resolve(apiDefinitionObject);
+                                    return Promise.resolve(definitionObject);
                                 }
                                 return Promise.reject(error);
                             });
                     })
-                    .then(apiDefinitionObject => {
-                        return this.apiServiceProvider.createApi(apiDefinitionObject);
+                    .then(definitionObject => {
+                        return this.apiServiceProvider.createApi(definitionObject);
                     })
                     .catch(error => {
                         const errorMessage = `create operation failed because: ${error.message}`;
