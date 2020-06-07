@@ -92,12 +92,23 @@ class CloudApiManagerController {
                                     apiDefinitionObject.api_definition.name} already exists`;
                                 logger.error(`.create: ${errorMessage}`);
                                 return Promise.reject(new Error(errorMessage));
+                            })
+                            .catch(error => {
+                                if (/asset with name (.*) does not exist in the provider/.test(error.message)) {
+                                    logger.info(`.create: asset with name ${apiDefinitionObject.api_definition.name
+                                        } does not exist, proceeding with creation`);
+                                    return Promise.resolve(apiDefinitionObject);
+                                }
+                                return Promise.reject(error);
                             });
+                    })
+                    .then(apiDefinitionObject => {
+                        return this.apiServiceProvider.createApi(apiDefinitionObject);
                     })
                     .catch(error => {
                         const errorMessage = `create operation failed because: ${error.message}`;
                         logger.error(`.create: ${errorMessage}`);
-                        return Promise.reject(new Error(errorMessage));                        
+                        return Promise.reject(new Error(errorMessage));
                     });
             case 'policy':
                 return inputObjectPromise;
@@ -155,19 +166,19 @@ class CloudApiManagerController {
             case 'policy':
                 const desiredPolicyName = assetObject.name;
                 return this.apiServiceProvider.findPolicyByName(desiredPolicyName)
-                .then(searchResults => {
-                    if (searchResults.Data.length < 1) {
-                        throw Error(`the asset with name ${desiredPolicyName} does not exist in the provider`);
-                    }
-                    logger.info(`${searchResults.Data.length} search result(s) for asset name: ${desiredPolicyName}`);
-                    const matchingResults = searchResults.Data.filter(eachPolicy =>
-                        desiredPolicyName === eachPolicy.name);
-                    return matchingResults[0]._id;
-                })
-                .catch(error => {
-                    logger.error(`.findAssetIdentifier failed because: ${error.message}`);
-                    return Promise.reject(error);
-                });
+                    .then(searchResults => {
+                        if (searchResults.Data.length < 1) {
+                            throw Error(`the asset with name ${desiredPolicyName} does not exist in the provider`);
+                        }
+                        logger.info(`${searchResults.Data.length} search result(s) for asset name: ${desiredPolicyName}`);
+                        const matchingResults = searchResults.Data.filter(eachPolicy =>
+                            desiredPolicyName === eachPolicy.name);
+                        return matchingResults[0]._id;
+                    })
+                    .catch(error => {
+                        logger.error(`.findAssetIdentifier failed because: ${error.message}`);
+                        return Promise.reject(error);
+                    });
             default:
                 const errorMessage = `The specified type, ${type}, is not valid.`;
                 logger.error(errorMessage);

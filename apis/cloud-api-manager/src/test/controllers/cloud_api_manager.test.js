@@ -146,7 +146,7 @@ describe("CloudApiManagerController", function () {
 
             const createApiProviderStub = sinon.stub(testController.apiServiceProvider, "createApi");
             const apiSearchProviderError = new Error(`.createApi failed because: some generic error`);
-            createApiProviderStub.withArgs(Promise.resolve(sample_api_payload))
+            createApiProviderStub.withArgs(sample_api_payload)
                 .returns(Promise.reject(apiSearchProviderError));
 
             const creationResponsePromise = testController.create('api', Promise.resolve(sample_api_payload));
