@@ -131,7 +131,25 @@ describe("CloudApiManagerController", function () {
         });
     });
     describe(".create", function () {
-        it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds");
+        it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds", function() {
+            const { name, auth, definition, version_data, proxy } = tykApiResponseData.api_definition;
+            const sample_api_payload = {
+                api_definition: { name, auth, definition, version_data, proxy }
+            };
+            const returnedSearchResults = {apis: []};
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+
+            const findApiByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findApiByName");
+            findApiByNameProviderStub.returns(Promise.resolve(returnedSearchResults));
+
+            const createApiProviderStub = sinon.stub(testController.apiServiceProvider, "createApi");
+            createApiProviderStub.withArgs(sample_api_payload).returns(Promise.resolve({status:"ok"}));
+
+            const creationResponsePromise = testController.create('api', Promise.resolve(sample_api_payload));
+
+            return expect(creationResponsePromise).to.eventually.have.property("status").equal("ok");
+        });
         it("apis: should reject with error if no api with similar name but operation fails", function() {
             const { name, auth, definition, version_data, proxy } = tykApiResponseData.api_definition;
             const sample_api_payload = {
@@ -145,13 +163,13 @@ describe("CloudApiManagerController", function () {
             findApiByNameProviderStub.returns(Promise.resolve(returnedSearchResults));
 
             const createApiProviderStub = sinon.stub(testController.apiServiceProvider, "createApi");
-            const apiSearchProviderError = new Error(`.createApi failed because: some generic error`);
+            const apiCreateProviderError = new Error(`.createApi failed because: some generic error`);
             createApiProviderStub.withArgs(sample_api_payload)
-                .returns(Promise.reject(apiSearchProviderError));
+                .returns(Promise.reject(apiCreateProviderError));
 
             const creationResponsePromise = testController.create('api', Promise.resolve(sample_api_payload));
 
-            return expect(creationResponsePromise).eventually.rejectedWith(
+            return expect(creationResponsePromise).to.eventually.be.rejectedWith(
                 /create operation failed because: (.*) some generic error/);
         });
         it("apis: should reject with error if api with similar name", function() {
@@ -165,7 +183,7 @@ describe("CloudApiManagerController", function () {
                 api_definition: { name, auth, definition, version_data, proxy }
             }));
 
-            return expect(creationResponsePromise).eventually.rejectedWith(
+            return expect(creationResponsePromise).to.eventually.be.rejectedWith(
                 /create operation failed because: an asset with name (.*) already exists/);
         });
         it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
