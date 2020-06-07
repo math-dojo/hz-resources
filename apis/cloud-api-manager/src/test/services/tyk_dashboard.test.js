@@ -159,7 +159,7 @@ describe("TykDashboardService", function() {
                 .reply(400, "some generic error");
             const apiDataResponse = tykDashboardService.createApi(tykCreateApiRequestObject);
             return Promise.all([
-                expect(apiDataResponse).to.eventually.be.rejected
+                expect(apiDataResponse).to.eventually.be.rejectedWith(/some generic error/)
             ]);
             
         });

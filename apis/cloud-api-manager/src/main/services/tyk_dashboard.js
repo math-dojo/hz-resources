@@ -104,7 +104,8 @@ class TykDashboardService {
             }
         })
         .catch(error => {
-            const wrappedError = new Error(`.createApi failed because: ${error.message}`);
+            const errorReasonToShow = error.response.data ? error.response.data : error.message;
+            const wrappedError = new Error(`.createApi failed because: ${errorReasonToShow}`);
             logger.error(wrappedError.message);
             return Promise.reject(wrappedError);
         });
