@@ -72,10 +72,33 @@ class CloudApiManagerController {
         }
     }
 
+    /**
+     * Creates an asset, returning a status message indicating success or failure
+     * @param {'api' | 'policy'} type 
+     * @param {Promise<Object>} inputObjectPromise 
+     */
     create(type, inputObjectPromise) {
         switch (type) {
             case 'api':
-                return inputObjectPromise;
+                return inputObjectPromise
+                    .then(apiDefinitionObject => {
+                        logger.info(`.create: checking if asset with name ${apiDefinitionObject.api_definition.name
+                            } exists`);
+                        return this.findAssetIdentifier(type, apiDefinitionObject)
+                            .then(systemId => {
+                                logger.info(`.create: systemId for asset with name ${
+                                    apiDefinitionObject.api_definition.name} is ${systemId}`);
+                                const errorMessage = `an asset with name ${
+                                    apiDefinitionObject.api_definition.name} already exists`;
+                                logger.error(`.create: ${errorMessage}`);
+                                return Promise.reject(new Error(errorMessage));
+                            });
+                    })
+                    .catch(error => {
+                        const errorMessage = `create operation failed because: ${error.message}`;
+                        logger.error(`.create: ${errorMessage}`);
+                        return Promise.reject(new Error(errorMessage));                        
+                    });
             case 'policy':
                 return inputObjectPromise;
             default:
