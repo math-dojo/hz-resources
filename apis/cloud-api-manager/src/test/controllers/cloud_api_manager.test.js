@@ -140,12 +140,12 @@ describe("CloudApiManagerController", function () {
             const findApiByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findApiByName");
             findApiByNameProviderStub.returns(Promise.resolve(tykApiSearchResponseData));
             
-            const creationResponsePromise = testController.create('api', {
+            const creationResponsePromise = testController.create('api', Promise.resolve({
                 api_definition: { name, auth, definition, version_data, proxy }
-            });
+            }));
 
             return expect(creationResponsePromise).eventually.rejectedWith(
-                /create operation failed because: the asset with name (.*) does not exist/);
+                /create operation failed because: an asset with name (.*) already exists/);
         });
         it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
         it("policies: should reject with error if no policy with similar name but operation fails");
