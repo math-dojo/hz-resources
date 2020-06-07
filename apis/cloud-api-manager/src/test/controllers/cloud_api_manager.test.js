@@ -131,16 +131,28 @@ describe("CloudApiManagerController", function () {
         });
     });
     describe(".create", function () {
-        it("should return if successful");
-        it("should throw an error if unsuccessful");
+        it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds");
+        it("apis: should reject with error if no api with similar name but operation fails");
+        it("apis: should reject with error if api with similar name");
+        it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
+        it("policies: should reject with error if no policy with similar name but operation fails");
+        it("policies: should reject with error if policy with similar name");
     });
     describe(".update", function () {
-        it("should return if successful");
-        it("should throw an error if unsuccessful");
+        it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds");
+        it("apis: should reject with error if no api with similar name but operation fails");
+        it("apis: should reject with error if api with similar name");
+        it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
+        it("policies: should reject with error if no policy with similar name but operation fails");
+        it("policies: should reject with error if policy with similar name");
     });
     describe(".delete", function () {
-        it("should return if successful");
-        it("should throw an error if unsuccessful");
+        it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds");
+        it("apis: should reject with error if no api with similar name but operation fails");
+        it("apis: should reject with error if api with similar name");
+        it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
+        it("policies: should reject with error if no policy with similar name but operation fails");
+        it("policies: should reject with error if policy with similar name");
     });
 });
 
