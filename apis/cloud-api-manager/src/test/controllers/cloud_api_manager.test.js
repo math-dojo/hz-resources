@@ -132,7 +132,28 @@ describe("CloudApiManagerController", function () {
     });
     describe(".create", function () {
         it("apis: should resolve with {status:ok} if no api with similar name and operation succeeds");
-        it("apis: should reject with error if no api with similar name but operation fails");
+        it("apis: should reject with error if no api with similar name but operation fails", function() {
+            const { name, auth, definition, version_data, proxy } = tykApiResponseData.api_definition;
+            const sample_api_payload = {
+                api_definition: { name, auth, definition, version_data, proxy }
+            };
+            const returnedSearchResults = {apis: []};
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+
+            const findApiByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findApiByName");
+            findApiByNameProviderStub.returns(Promise.resolve(returnedSearchResults));
+
+            const createApiProviderStub = sinon.stub(testController.apiServiceProvider, "createApi");
+            const apiSearchProviderError = new Error(`.createApi failed because: some generic error`);
+            createApiProviderStub.withArgs(Promise.resolve(sample_api_payload))
+                .returns(Promise.reject(apiSearchProviderError));
+
+            const creationResponsePromise = testController.create('api', Promise.resolve(sample_api_payload));
+
+            return expect(creationResponsePromise).eventually.rejectedWith(
+                /create operation failed because: (.*) some generic error/);
+        });
         it("apis: should reject with error if api with similar name", function() {
             const { name, auth, definition, version_data, proxy } = tykApiResponseData.api_definition;
 
