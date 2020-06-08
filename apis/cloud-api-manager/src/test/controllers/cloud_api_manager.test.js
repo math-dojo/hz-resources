@@ -188,7 +188,24 @@ describe("CloudApiManagerController", function () {
             return expect(creationResponsePromise).to.eventually.be.rejectedWith(
                 /create operation failed because: an asset with name (.*) already exists/);
         });
-        it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds");
+        it("policies: should resolve with {status:ok} if no policy with similar name and operation succeeds", function() {
+            const { name, access_rights, active } = tykFindPolicyByNameResponseData.Data[0];
+            const policyCreatePayload = {
+                name, access_rights, active
+            };
+
+            const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
+            const findPolicyByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findPolicyByName");
+            findPolicyByNameProviderStub.returns(Promise.resolve({Data:[]}));
+
+            const createPolicyProviderStub = sinon.stub(testController.apiServiceProvider, "createPolicy");           
+            createPolicyProviderStub.withArgs(policyCreatePayload)
+                .returns(Promise.resolve({status:"ok"}));
+
+            const creationResponsePromise = testController.create('policy', Promise.resolve(policyCreatePayload));
+
+            return expect(creationResponsePromise).to.eventually.have.property("status").equal("ok");
+        });
         it("policies: should reject with error if no policy with similar name but operation fails", function() {
             const { name, access_rights, active } = tykFindPolicyByNameResponseData.Data[0];
             const policyCreatePayload = {
