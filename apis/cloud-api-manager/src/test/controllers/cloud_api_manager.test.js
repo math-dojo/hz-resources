@@ -244,19 +244,19 @@ describe("CloudApiManagerController", function () {
     describe(".update", function () {
         it("apis: should resolve with {status:ok} if api with similar name and operation succeeds");
         it("apis: should reject with error if api with similar name but operation fails");
-        it("apis: should reject with error if no api with similar name", function (params) {
+        it("apis: should reject with error if no api with similar name", function () {
             const { name, auth, definition, version_data, proxy } = tykApiResponseData.api_definition;
 
             const testController = new CloudApiManagerController({ provider: 'tyk', authorisation: 'fizzbuzz' });
             const findApiByNameProviderStub = sinon.stub(testController.apiServiceProvider, "findApiByName");
             findApiByNameProviderStub.returns(Promise.resolve({apis:[]}));
             
-            const creationResponsePromise = testController.create('api', Promise.resolve({
+            const creationResponsePromise = testController.update('api', Promise.resolve({
                 api_definition: { name, auth, definition, version_data, proxy }
             }));
 
             return expect(creationResponsePromise).to.eventually.be.rejectedWith(
-                /update operation failed because: an asset with name (.*) does not exist/);            
+                /update operation failed because: the asset with name (.*) does not exist/);            
         });
         it("policies: should resolve with {status:ok} if policy with similar name and operation succeeds");
         it("policies: should reject with error if policy with similar name but operation fails");

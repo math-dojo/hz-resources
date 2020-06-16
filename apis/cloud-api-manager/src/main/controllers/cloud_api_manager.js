@@ -153,7 +153,35 @@ class CloudApiManagerController {
     update(type, inputObjectPromise) {
         switch (type) {
             case 'api':
-                return inputObjectPromise;
+                return inputObjectPromise
+                .then(definitionObject => {
+                    const assetName = definitionObject.api_definition.name;
+                    logger.info(`.update: checking if asset with name ${assetName
+                        } exists`);
+                    return this.findAssetIdentifier(type, definitionObject)
+                        .then(systemId => {
+                            logger.info(`.update: systemId for asset with name ${
+                                definitionObject.api_definition.name} is ${systemId}`);
+                            logger.info(`.update: asset with name ${definitionObject.api_definition.name
+                                } already exists, proceeding with update`);
+                            return Promise.resolve({systemId, definitionObject});
+                        })
+                        .catch(error => {
+                            if (/asset with name (.*) does not exist in the provider/.test(error.message)) {
+                                logger.info(`.update: asset with name ${definitionObject.api_definition.name
+                                    } does not exist, terminating update`);
+                            }
+                            return Promise.reject(error);
+                        });
+                })
+                .then(({systemId, definitionObject}) => {
+                    return this.apiServiceProvider.updateApiBySystemId(systemId, definitionObject);
+                })
+                .catch(error => {
+                    const errorMessage = `update operation failed because: ${error.message}`;
+                    logger.error(`.update: ${errorMessage}`);
+                    return Promise.reject(new Error(errorMessage));
+                });
             case 'policy':
                 return inputObjectPromise;
             default:
