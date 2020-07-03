@@ -1,0 +1,43 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+pr:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+  repositories:
+  - repository: horizontal_utilities # The name used to reference this repository in the checkout step
+    type: github
+    endpoint: noce2cicd
+    name: math-dojo/horizontal-utilities
+    ref: master 
+
+stages:
+  - stage: Configure Prereqs
+    jobs:
+      - job: Setup_Cloud_Manager
+        steps:
+          - checkout: self
+          - checkout: horizontal_utilities
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '12.x'
+            displayName: 'Install Node.js'
+          
+          - script: |
+              pwd
+              cd ./horizontal-utilities
+              pwd
+            displayName: 'Setup Utilities'
+          
+          - script: |
+              pwd
+              cd ./hz-resources
+              pwd
+            displayName: 'Setup rhz-resources'
+  
