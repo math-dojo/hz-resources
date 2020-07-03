@@ -18,7 +18,8 @@ resources:
     ref: master 
 
 stages:
-  - stage: Configure Prereqs
+  - stage: Configure_Prereqs
+    displayName: Configure Pre-requisites
     jobs:
       - job: Setup_Cloud_Manager
         steps:
