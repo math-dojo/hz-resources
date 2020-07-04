@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "debug": "^4.1.1",
-    "nodegit": "^0.26.5",
+    "simple-git": "^2.11.0",
     "yargs": "^15.4.0"
   },
   "private": true,
