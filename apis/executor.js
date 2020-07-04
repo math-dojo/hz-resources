@@ -48,6 +48,11 @@ class Executor {
                 return Promise.reject(new Error(`node could not be found because: ${stderr}`))
 
             })
+        this.targetBranchName = targetBranchName;
+        this.sourceBranchName = sourceBranchName;
+        this.cloudProviderAuthorisationToken = cloudProviderAuthorisationToken;
+        this.utilityPath = path.normalize(utilityPath);
+        this.execFile = childProcessExecutorFunction;
     }
 
     execute() {
