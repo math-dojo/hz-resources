@@ -1,10 +1,12 @@
 const debug = require('debug');
 
 class CustomLogger {
-    constructor(namespace) {
+    constructor(namespace, isForTestCode = false) {
+        const packageName = "cloud-api-onboarding-executor";
+        const prefix = isForTestCode ? `${packageName}-test` : packageName
         this._namespace = namespace;
-        this._errorDebugLogger = debug(`cloud-api-onboarding-executor:${namespace}:error`);
-        const info_log = debug(`cloud-api-onboarding-executor:${namespace}:info`);
+        this._errorDebugLogger = debug(`${prefix}:${namespace}:error`);
+        const info_log = debug(`${prefix}:${namespace}:info`);
         /**
          * set info logs to go via stdout as debug
          * binds to stderr by default
