@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const fs = require('fs');
 
 const argv = require('yargs')
     .alias('a', 'authorisation')
@@ -8,6 +9,15 @@ const argv = require('yargs')
     .nargs('r', 1)
     .describe('r', 'path to the git repository with the changes to be compared')
     .normalize('r')
+    .coerce('r', function (suppliedarg) {
+        const status = fs.statSync(suppliedarg);
+        if (status.isDirectory) {
+            return suppliedarg;
+        }
+
+        throw new Error(`the value ${suppliedarg} is not a directory`);
+
+    })
     .alias('s', 'source-branch')
     .nargs('s', 1)
     .describe('s', 'name of the branch with the changes to merge')
