@@ -4,7 +4,16 @@
 # https://aka.ms/yaml
 
 pr:
-- master
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - apis/non-production/*
+    - apis/pre-production/*
+    - apis/production/*
+    exclude:
+    - apis/README.md
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -31,14 +40,14 @@ stages:
             displayName: 'Install Node.js'
           
           - script: |
-              pwd
               cd ./horizontal-utilities
               pwd
+              ls -a
             displayName: 'Setup Utilities'
           
           - script: |
-              pwd
               cd ./hz-resources
               pwd
-            displayName: 'Setup rhz-resources'
+              ls -a
+            displayName: 'Setup hz-resources'
   
