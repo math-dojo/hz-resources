@@ -72,6 +72,56 @@ class Executor {
             .then(this.splitGitDiffTextOutput);
     }
 
+
+    onboardCreatedFiles({
+        utilityPath,
+        arrayOfFileNames,
+        promisifiedExecFileFunction = execFile,
+        nodeExecutableLocation,
+        cloudProviderAuthorisationToken,
+        operationToPerform
+    }) {
+
+        const normalisedUtilityPath = path.normalize(utilityPath);
+        process.env['CLOUD_APIMGT_AUTHORISATION'] = cloudProviderAuthorisationToken;
+        /* The cloud-api-manager program by default does not log to the console so
+            this needs to be selectively enabled via the DEBUG environment parameter 
+            used to show the logs. */
+        process.env['DEBUG'] = "cloud-api-manager*";
+
+        const execConfig = {
+            cwd: path.parse(process.cwd()).dir,
+            windowsHide: true,
+            env: process.env
+        };
+
+        const apiTypeRegex = /api\-definitions/;
+        const policyTypeRegex = /policy\-definitions/;
+        return Promise.all(arrayOfFileNames.map((eachFilePath) => {
+            const assetType = (apiTypeRegex.test(eachFilePath) ? 'api' :
+                policyTypeRegex.test(eachFilePath) ? 'policy' :
+                    '');
+            if (assetType) {
+                const args = [
+                    `${normalisedUtilityPath}`,
+                    '--filePath',
+                    `${eachFilePath}`,
+                    '--operation',
+                    `${operationToPerform}`,
+                    '--type',
+                    `${assetType}`,
+                    '--provider',
+                    `tyk`
+                ];
+                return promisifiedExecFileFunction(nodeExecutableLocation, args, execConfig)
+            } else {
+                const message = `the file ${eachFilePath} cannot be classified based on its location`;
+                logger.error(message)
+                return Promise.reject(new Error(message));
+            }
+        }));
+    }
+
     /**
      * Identify modified files
      * @param {Object} identificationConfigObject 
