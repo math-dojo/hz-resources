@@ -1,4 +1,4 @@
-const logger = new (require("./logging"))("index");
+const logger = new (require("./logging"))("index", true);
 // jshint esversion:6
 const { describe, it } = require("mocha");
 const chai = require("chai");
