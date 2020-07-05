@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const logger = new (require("./logging"))("index");
+
 const fs = require('fs');
 
 const argv = require('yargs')

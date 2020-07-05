@@ -1,3 +1,5 @@
+const logger = new (require("./logging"))("executor");
+
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
 const exec = util.promisify(require('child_process').exec);
