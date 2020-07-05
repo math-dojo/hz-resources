@@ -1,0 +1,27 @@
+{
+  "name": "cloud-api-onboarding-executor",
+  "version": "1.0.0",
+  "description": "## Notes for request signature api",
+  "main": "index.js",
+  "scripts": {
+    "test:showlogs": "DEBUG=cloud-api-onboarding-executor-test* ./node_modules/.bin/mocha",
+    "pretest": "npm install",
+    "test": "./node_modules/.bin/mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "simple-git": "^2.11.0",
+    "yargs": "^15.4.0"
+  },
+  "private": true,
+  "engines": {
+    "node": "^12.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^8.0.1"
+  }
+}
